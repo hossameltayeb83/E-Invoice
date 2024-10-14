@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BlazorProject.Infrastructure.Migrations
 {
     [DbContext(typeof(ProjectContext))]
-    [Migration("20241012225312_init")]
+    [Migration("20241014011123_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -102,8 +102,14 @@ namespace BlazorProject.Infrastructure.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<decimal>("ItemNetAmount")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
+
+                    b.Property<decimal>("Total")
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 

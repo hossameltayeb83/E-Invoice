@@ -1,4 +1,6 @@
 ﻿using BlazorProject.Application.Contracts.Mediator;
+using BlazorProject.Application.Features.Items.Command;
+using BlazorProject.Application.Features.Items.Query;
 using BlazorProject.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;

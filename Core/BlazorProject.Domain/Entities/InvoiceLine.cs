@@ -16,6 +16,8 @@ namespace BlazorProject.Domain.Entities
 		public string ItemName { get; set; }
 		public int Quantity { get; set; }
 		public decimal Amount { get; set; }
+		public decimal Total {  get; set; }
+		public decimal ItemNetAmount { get; set; }
 		public IReadOnlyCollection<InvoiceLineTax> InvoiceLineTaxes { get; set; }
 	}
 }

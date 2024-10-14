@@ -3,6 +3,8 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using BlazorProject.Application.Contracts.Mediator;
 using BlazorProject.Domain.Common;
+using BlazorProject.Application.Common.Mediator.Command;
+using BlazorProject.Application.Common.Mediator.Query;
 namespace BlazorProject.Server.Controllers
 {
 

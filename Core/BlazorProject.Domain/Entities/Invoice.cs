@@ -13,6 +13,7 @@ namespace BlazorProject.Domain.Entities
 		public InvoiceType Type { get; set; }
 		public string Code { get; set; }
 		public decimal NetAmount { get; set; }
+		public int CustomerID { get; set; }
 		public Customer Customer { get; set; }
 		public IReadOnlyCollection<InvoiceLine> InvoiceLines { get; set; }
 	}
