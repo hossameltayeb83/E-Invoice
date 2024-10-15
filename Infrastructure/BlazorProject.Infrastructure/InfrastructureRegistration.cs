@@ -1,4 +1,5 @@
 ﻿using BlazorProject.Application.Contracts;
+using BlazorProject.Application.Contracts.Infrastructre;
 using BlazorProject.Infrastructure.Data;
 using BlazorProject.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -21,6 +22,7 @@ namespace BlazorProject.Infrastructure
 				options.UseSqlServer(configuration.GetConnectionString("Connection"));
 			});
 			services.AddScoped(typeof(IRepository<>),typeof(BaseRepository<>));
+			services.AddScoped<IInvoiceRepository,InvoiceRepository>();
 			return services;
 		}
 	}

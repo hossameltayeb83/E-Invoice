@@ -8,7 +8,7 @@ using BlazorProject.Application.Common.Mediator.Query;
 namespace BlazorProject.Server.Controllers
 {
 
-	public abstract class BaseController<TEntity,TDto,TWriteDto> :ControllerBase where TEntity : BaseEntity where TDto:class where TWriteDto : class
+	public abstract class BaseController<TEntity,TDto> :ControllerBase where TEntity : BaseEntity where TDto:class
 	{
 		private readonly IMediator _mediator;
 		protected BaseController(IMediator mediator)
@@ -32,9 +32,9 @@ namespace BlazorProject.Server.Controllers
 
 		// POST api/<ItemController>
 		[HttpPost]
-		public async Task<IActionResult> Post([FromBody] TWriteDto Dto)
+		public async Task<IActionResult> Post([FromBody] TDto Dto)
 		{
-			var result = await _mediator.Send(new CreateCommand<TEntity, TWriteDto>() { Dto=Dto });
+			var result = await _mediator.Send(new CreateCommand<TEntity, TDto>() { Dto=Dto });
 			return Ok(result);
 		}
 
@@ -50,7 +50,7 @@ namespace BlazorProject.Server.Controllers
 		[HttpDelete("{id}")]
 		public async Task<IActionResult> Delete(int id)
 		{
-			var result = await _mediator.Send(new DeleteCommand<TEntity>() { Id = id });
+			var result = await _mediator.Send(new DeleteCommand<TEntity,TDto>() { Id = id });
 			return Ok(result);
 		}
 	}

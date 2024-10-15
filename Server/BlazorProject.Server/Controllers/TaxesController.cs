@@ -1,15 +1,14 @@
 ﻿using BlazorProject.Application.Contracts.Mediator;
-using BlazorProject.Application.Features.Taxes.Command;
-using BlazorProject.Application.Features.Taxes.Query;
+using BlazorProject.Application.Features.Taxes;
 using BlazorProject.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BlazorProject.Server.Controllers
 {
-	[Route("api/[controller]")]
+    [Route("api/[controller]")]
 	[ApiController]
-	public class TaxesController : BaseController<Tax, TaxDto,TaxWriteDto>
+	public class TaxesController : BaseController<Tax, TaxDto>
 	{
 		private readonly IMediator _mediator;
 		public TaxesController(IMediator mediator) : base(mediator)

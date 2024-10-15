@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BlazorProject.Application.Common.Mediator.Command;
 using BlazorProject.Application.Contracts;
+using BlazorProject.Application.Contracts.Mediator;
 using BlazorProject.Application.Responses;
 using BlazorProject.Domain.Common;
 using MediatR;
@@ -15,8 +16,15 @@ namespace BlazorProject.Application.Common.Mediator.Query
 	internal class GetOneQueryHandler<T, U> : IRequestHandler<GetOneQuery<T, U>, BaseResponse<U>> where T : BaseEntity where U : class
 	{
 		private readonly IRepository<T> _itemRepository;
+		private readonly IHandlerCustomLogic<T> _HandlerLogic;
 		private readonly IMapper _mapper;
 
+		public GetOneQueryHandler(IRepository<T> itemRepository, IHandlerCustomLogic<T> HandlerLogic, IMapper mapper)
+		{
+			_itemRepository = itemRepository;
+			_HandlerLogic = HandlerLogic;
+			_mapper = mapper;
+		}
 		public GetOneQueryHandler(IRepository<T> itemRepository, IMapper mapper)
 		{
 			_itemRepository = itemRepository;
@@ -25,8 +33,16 @@ namespace BlazorProject.Application.Common.Mediator.Query
 		public async Task<BaseResponse<U>> Handle(GetOneQuery<T, U> request, CancellationToken cancellationToken)
 		{
 			var response = new BaseResponse<U>();
-
-			var entity = await _itemRepository.GetByIdAsync(request.Id);
+			T entity;
+			if( _HandlerLogic !=null)
+				entity = await _HandlerLogic.GetOneLogic(request.Id);
+			else
+				entity = await _itemRepository.GetByIdAsync(request.Id);
+			if (entity == null)
+			{
+				response.Success = false;
+				return response;
+			}
 			var dto = _mapper.Map<U>(entity);
 
 			response.Result = dto;

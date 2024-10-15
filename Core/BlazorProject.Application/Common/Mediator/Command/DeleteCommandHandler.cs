@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace BlazorProject.Application.Common.Mediator.Command
 {
-	internal class DeleteCommandHandler<T> : IRequestHandler<DeleteCommand<T>, BaseResponse> where T : BaseEntity
+	internal class DeleteCommandHandler<T,U> : IRequestHandler<DeleteCommand<T,U>, BaseResponse> where T : BaseEntity where U : class
 	{
 		private readonly IRepository<T> _itemRepository;
 		private readonly IMapper _mapper;
@@ -21,7 +21,7 @@ namespace BlazorProject.Application.Common.Mediator.Command
 			_itemRepository = itemRepository;
 			_mapper = mapper;
 		}
-		public async Task<BaseResponse> Handle(DeleteCommand<T> request, CancellationToken cancellationToken)
+		public async Task<BaseResponse> Handle(DeleteCommand<T,U> request, CancellationToken cancellationToken)
 		{
 			var response = new BaseResponse();
 			var entity = await _itemRepository.GetByIdAsync(request.Id);

@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace BlazorProject.Application.Common.Mediator.Command
 {
 	
-	public class DeleteCommand<TEntity> : IRequest<BaseResponse> where TEntity : BaseEntity
+	public class DeleteCommand<TEntity,TDto> : IRequest<BaseResponse> where TEntity : BaseEntity where TDto : class
 	{
 		public int Id { get; set; }
 	}

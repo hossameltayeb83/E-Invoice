@@ -1,6 +1,5 @@
 ﻿using BlazorProject.Application.Contracts.Mediator;
-using BlazorProject.Application.Features.Items.Command;
-using BlazorProject.Application.Features.Items.Query;
+using BlazorProject.Application.Features.Items;
 using BlazorProject.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -9,9 +8,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BlazorProject.Server.Controllers
 {
-	[Route("api/[controller]")]
+    [Route("api/[controller]")]
 	[ApiController]
-	public class ItemsController : BaseController<Item,ItemDto,ItemWriteDto>
+	public class ItemsController : BaseController<Item,ItemDto>
 	{
 		private readonly IMediator _mediator;
 		public ItemsController(IMediator mediator) : base(mediator) 

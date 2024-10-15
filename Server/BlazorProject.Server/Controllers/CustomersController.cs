@@ -1,15 +1,14 @@
 ﻿using BlazorProject.Application.Contracts.Mediator;
-using BlazorProject.Application.Features.Customers.Command;
-using BlazorProject.Application.Features.Customers.Query;
+using BlazorProject.Application.Features.Customers;
 using BlazorProject.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BlazorProject.Server.Controllers
 {
-	[Route("api/[controller]")]
+    [Route("api/[controller]")]
 	[ApiController]
-	public class CustomersController : BaseController<Customer, CustomerDto, CustomerWriteDto>
+	public class CustomersController : BaseController<Customer, CustomerDto>
 	{
 		private readonly IMediator _mediator;
 		public CustomersController(IMediator mediator) : base(mediator)
