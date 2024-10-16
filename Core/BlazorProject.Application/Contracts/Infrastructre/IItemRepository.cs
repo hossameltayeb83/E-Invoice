@@ -1,4 +1,4 @@
-﻿using BlazorProject.Application.Features.Invoices;
+﻿using BlazorProject.Application.Features.Customers;
 using BlazorProject.Application.Features.Items;
 using BlazorProject.Domain.Entities;
 using System;
@@ -9,10 +9,9 @@ using System.Threading.Tasks;
 
 namespace BlazorProject.Application.Contracts.Infrastructre
 {
-	public interface IInvoiceRepository
+	public interface IItemRepository
 	{
-		Task<IReadOnlyList<Invoice>> GetInvoices(InvoiceDto searchCriteria);
+		Task<IReadOnlyList<Item>> GetItems(ItemDto searchCriteria);
 
-		ValueTask<Invoice?> GetInvoiceWithIncludes(int invoiceId);
 	}
 }

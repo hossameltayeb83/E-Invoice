@@ -33,11 +33,15 @@ namespace BlazorProject.Application.Common.Mediator.Query
 		public async Task<BaseResponse<U>> Handle(GetOneQuery<T, U> request, CancellationToken cancellationToken)
 		{
 			var response = new BaseResponse<U>();
-			T entity;
-			if( _HandlerLogic !=null)
-				entity = await _HandlerLogic.GetOneLogic(request.Id);
+			T? entity;
+			if (_HandlerLogic is ICustomGetOneLogic<T> handler)
+			{
+				entity = await handler.GetOneLogic(request.Id);
+			}
 			else
+			{
 				entity = await _itemRepository.GetByIdAsync(request.Id);
+			}
 			if (entity == null)
 			{
 				response.Success = false;

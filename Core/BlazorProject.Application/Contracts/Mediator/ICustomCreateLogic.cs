@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace BlazorProject.Application.Contracts.Mediator
 {
-	internal interface IHandlerCustomLogic<T>
+	internal interface ICustomCreateLogic<TEntity>
 	{
-		
+		void CreateLogic(TEntity entity);
 	}
 }

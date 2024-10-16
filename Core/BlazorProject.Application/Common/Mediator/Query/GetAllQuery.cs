@@ -11,7 +11,9 @@ namespace BlazorProject.Application.Common.Mediator.Query
 {
 	public class GetAllQuery<TEntity, TDto> : IRequest<BaseResponse<List<TDto>>> where TEntity : BaseEntity where TDto : class
 	{
-		public string filter;
+		public TDto SerachCriteria { get; set; }
+		public int PageSize { get; set; }
+		public int PageCount { get; set; }
 	}
 	
 }

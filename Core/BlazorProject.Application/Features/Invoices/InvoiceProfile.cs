@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using BlazorProject.Application.Features.Customers;
-using BlazorProject.Application.Features.Invoices;
 using BlazorProject.Application.Features.Items;
 using BlazorProject.Application.Features.Taxes;
 using BlazorProject.Domain.Entities;
@@ -10,15 +9,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BlazorProject.Application.Contracts.Mediator
+namespace BlazorProject.Application.Features.Invoices
 {
-    internal class BaseProfile : Profile
+	internal class InvoiceProfile : Profile
 	{
-		public BaseProfile()
+		public InvoiceProfile()
 		{
-			CreateMap<Item, ItemDto>().ReverseMap();
-			CreateMap<Tax, TaxDto>().ReverseMap();
-			CreateMap<Customer, CustomerDto>().ReverseMap();
 			CreateMap<Invoice, InvoiceDto>().ReverseMap();
 			CreateMap<InvoiceLine, InvoiceLineDto>().ReverseMap();
 			CreateMap<InvoiceLineTax, InvoiceLineTaxDto>().ReverseMap();

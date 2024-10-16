@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace BlazorProject.Application.Contracts.Mediator
 {
-	internal interface IHandlerCustomLogic<T>
+	internal interface ICustomGetAllLogic<TEntity,TDto>
 	{
-		
+		Task<IReadOnlyList<TEntity>> GetAllLogic(TDto searchCriteria);
 	}
 }

@@ -23,6 +23,7 @@ namespace BlazorProject.Infrastructure
 			});
 			services.AddScoped(typeof(IRepository<>),typeof(BaseRepository<>));
 			services.AddScoped<IInvoiceRepository,InvoiceRepository>();
+			services.AddScoped<ICustomerRepository,CustomerRepository>();
 			return services;
 		}
 	}

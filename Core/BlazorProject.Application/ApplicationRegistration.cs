@@ -38,6 +38,9 @@ namespace BlazorProject.Application
 				,new EntityTypes {Entity= typeof(Customer),Dto=typeof(CustomerDto)}
 				,new EntityTypes {Entity= typeof(Invoice),Dto=typeof(InvoiceDto)}
 			});
+			services.AddScoped<IHandlerCustomLogic<Item>, ItemHandlerLogic>();
+			services.AddScoped<IHandlerCustomLogic<Tax>, TaxHandlerLogic>();
+			services.AddScoped<IHandlerCustomLogic<Customer>, CustomerHandlerLogic>();
 			services.AddScoped<IHandlerCustomLogic<Invoice>,InvoiceHandlerLogic>();
 			services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 			return services;

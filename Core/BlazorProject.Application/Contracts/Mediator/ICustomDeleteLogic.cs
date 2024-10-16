@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace BlazorProject.Application.Contracts.Mediator
 {
-	internal interface IHandlerCustomLogic<T>
+	internal interface ICustomDeleteLogic<T>
 	{
-		
+		void DelteLogic(T entity);
+
 	}
 }

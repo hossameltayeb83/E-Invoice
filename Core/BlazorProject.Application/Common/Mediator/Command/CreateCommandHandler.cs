@@ -35,9 +35,9 @@ namespace BlazorProject.Application.Common.Mediator.Command
 		{
 			var response = new BaseResponse<int>();
 			var entity = _mapper.Map<T>(request.Dto);
-			if(entity is IEntityCustomLogic)
+			if(_HandlerLogic is ICustomCreateLogic<T> handler)
 			{
-				_HandlerLogic.CreateLogic(entity);
+				handler.CreateLogic(entity);
 			}
 			response.Result = await _itemRepository.AddAsync(entity);
 			return response;

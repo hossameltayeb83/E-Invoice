@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace BlazorProject.Domain.Entities
 {
-	public class Invoice : AuditableEntity,IEntityCustomLogic
+	public class Invoice : AuditableEntity
 	{
 		public InvoiceType Type { get; set; }
 		public string Code { get; set; }
