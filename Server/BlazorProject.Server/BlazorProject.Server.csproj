@@ -19,6 +19,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Core\BlazorProject.Application\BlazorProject.Application.csproj" />
     <ProjectReference Include="..\..\Core\BlazorProject.Domain\BlazorProject.Domain.csproj" />
+    <ProjectReference Include="..\..\Core\BlazorProject.Shared\BlazorProject.Shared.csproj" />
     <ProjectReference Include="..\..\Infrastructure\BlazorProject.Infrastructure\BlazorProject.Infrastructure.csproj" />
   </ItemGroup>
 

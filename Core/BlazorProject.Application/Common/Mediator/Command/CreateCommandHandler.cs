@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FluentValidation;
 
 namespace BlazorProject.Application.Common.Mediator.Command
 {
@@ -17,13 +18,15 @@ namespace BlazorProject.Application.Common.Mediator.Command
 	{
 		private readonly IRepository<T> _repository;
 		private readonly IHandlerCustomLogic<T> _handlerLogic;
+		private readonly AbstractValidator<U> _validator;
 		private readonly IMapper _mapper;
 
 
-		public CreateCommandHandler(IRepository<T> repository,IHandlerCustomLogic<T> handlerLogic, IMapper mapper)
+		public CreateCommandHandler(IRepository<T> repository,IHandlerCustomLogic<T> handlerLogic,AbstractValidator<U> validator,IMapper mapper)
 		{
 			_repository = repository;
 			_handlerLogic = handlerLogic;
+			_validator= validator;
 			_mapper = mapper;
 		}
 		public CreateCommandHandler(IRepository<T> repository, IMapper mapper)
@@ -34,6 +37,9 @@ namespace BlazorProject.Application.Common.Mediator.Command
 		public async Task<BaseResponse<int>> Handle(CreateCommand<T, U> request, CancellationToken cancellationToken)
 		{
 			var response = new BaseResponse<int>();
+			var validationResult = _validator.Validate(request.Dto);
+			if (!validationResult.IsValid)
+				throw new Exception("failed");
 			var entity = _mapper.Map<T>(request.Dto);
 			if(_handlerLogic is ICustomCreateLogic<T> _handler)
 			{

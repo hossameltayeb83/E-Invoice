@@ -1,6 +1,7 @@
 
 using BlazorProject.Application;
 using BlazorProject.Infrastructure;
+using BlazorProject.Shared;
 
 namespace BlazorProject.Server
 {
@@ -15,6 +16,7 @@ namespace BlazorProject.Server
 			builder.Services.AddControllers();
 			builder.Services.AddApplicationServies();
 			builder.Services.AddInfrastructureServices(builder.Configuration);
+			builder.Services.AddSharedServices();
 
 
 			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

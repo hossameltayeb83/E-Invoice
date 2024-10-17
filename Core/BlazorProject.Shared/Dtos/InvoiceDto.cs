@@ -23,6 +23,7 @@ namespace BlazorProject.Shared.Dtos
         public decimal Total { get; set; }
         public int Quantity { get; set; }
         public decimal Amount { get; set; }
+        public decimal ItemNetAmount { get; set; }
         public List<InvoiceLineTaxDto>? InvoiceLineTaxes { get; set; }
     }
     public class InvoiceLineTaxDto
