@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BlazorProject.Domain\BlazorProject.Domain.csproj" />
+    <ProjectReference Include="..\BlazorProject.Shared\BlazorProject.Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>

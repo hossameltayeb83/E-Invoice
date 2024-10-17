@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BlazorProject.Application.Responses
+namespace BlazorProject.Shared.Responses
 {
-	internal class PaginatedResponse<T> : BaseResponse<T>
+	public class PaginatedResponse<T> : BaseResponse<T>
 	{
 		public int Page { get; }
 		public int PageSize { get; }

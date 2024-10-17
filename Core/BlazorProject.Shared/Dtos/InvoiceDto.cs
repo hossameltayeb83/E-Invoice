@@ -1,11 +1,10 @@
-﻿using BlazorProject.Application.Contracts.Mediator;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BlazorProject.Application.Features.Invoices
+namespace BlazorProject.Shared.Dtos
 {
     public class InvoiceDto
     {
@@ -13,7 +12,7 @@ namespace BlazorProject.Application.Features.Invoices
         public int CustomerId { get; set; }
         public string? Code { get; set; }
         public decimal NetAmount { get; set; }
-        public List<InvoiceLineDto> InvoiceLines { get; set; }
+        public List<InvoiceLineDto>? InvoiceLines { get; set; }
     }
     public class InvoiceLineDto
     {
@@ -24,7 +23,7 @@ namespace BlazorProject.Application.Features.Invoices
         public decimal Total { get; set; }
         public int Quantity { get; set; }
         public decimal Amount { get; set; }
-        public List<InvoiceLineTaxDto> InvoiceLineTaxes { get; set; }
+        public List<InvoiceLineTaxDto>? InvoiceLineTaxes { get; set; }
     }
     public class InvoiceLineTaxDto
     {

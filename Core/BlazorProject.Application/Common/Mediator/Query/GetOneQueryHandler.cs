@@ -2,8 +2,8 @@
 using BlazorProject.Application.Common.Mediator.Command;
 using BlazorProject.Application.Contracts;
 using BlazorProject.Application.Contracts.Mediator;
-using BlazorProject.Application.Responses;
 using BlazorProject.Domain.Common;
+using BlazorProject.Shared.Responses;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -15,32 +15,32 @@ namespace BlazorProject.Application.Common.Mediator.Query
 {
 	internal class GetOneQueryHandler<T, U> : IRequestHandler<GetOneQuery<T, U>, BaseResponse<U>> where T : BaseEntity where U : class
 	{
-		private readonly IRepository<T> _itemRepository;
-		private readonly IHandlerCustomLogic<T> _HandlerLogic;
+		private readonly IRepository<T> _repository;
+		private readonly IHandlerCustomLogic<T> _handlerLogic;
 		private readonly IMapper _mapper;
 
-		public GetOneQueryHandler(IRepository<T> itemRepository, IHandlerCustomLogic<T> HandlerLogic, IMapper mapper)
+		public GetOneQueryHandler(IRepository<T> repository, IHandlerCustomLogic<T> handlerLogic, IMapper mapper)
 		{
-			_itemRepository = itemRepository;
-			_HandlerLogic = HandlerLogic;
+			_repository = repository;
+			_handlerLogic = handlerLogic;
 			_mapper = mapper;
 		}
-		public GetOneQueryHandler(IRepository<T> itemRepository, IMapper mapper)
+		public GetOneQueryHandler(IRepository<T> repository, IMapper mapper)
 		{
-			_itemRepository = itemRepository;
+			_repository = repository;
 			_mapper = mapper;
 		}
 		public async Task<BaseResponse<U>> Handle(GetOneQuery<T, U> request, CancellationToken cancellationToken)
 		{
 			var response = new BaseResponse<U>();
 			T? entity;
-			if (_HandlerLogic is ICustomGetOneLogic<T> handler)
+			if (_handlerLogic is ICustomGetOneLogic<T> _handler)
 			{
-				entity = await handler.GetOneLogic(request.Id);
+				entity = await _handler.GetOneLogic(request.Id);
 			}
 			else
 			{
-				entity = await _itemRepository.GetByIdAsync(request.Id);
+				entity = await _repository.GetByIdAsync(request.Id);
 			}
 			if (entity == null)
 			{

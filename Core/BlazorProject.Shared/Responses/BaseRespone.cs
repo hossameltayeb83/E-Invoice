@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BlazorProject.Application.Responses
+namespace BlazorProject.Shared.Responses
 {
 	public class BaseResponse
 	{

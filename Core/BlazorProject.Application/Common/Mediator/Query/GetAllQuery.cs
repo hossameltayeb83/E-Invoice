@@ -1,4 +1,4 @@
-﻿using BlazorProject.Application.Responses;
+﻿using BlazorProject.Shared.Responses;
 using BlazorProject.Domain.Common;
 using MediatR;
 using System;
@@ -12,8 +12,8 @@ namespace BlazorProject.Application.Common.Mediator.Query
 	public class GetAllQuery<TEntity, TDto> : IRequest<BaseResponse<List<TDto>>> where TEntity : BaseEntity where TDto : class
 	{
 		public TDto SerachCriteria { get; set; }
+		public int Page { get; set; }
 		public int PageSize { get; set; }
-		public int PageCount { get; set; }
 	}
 	
 }

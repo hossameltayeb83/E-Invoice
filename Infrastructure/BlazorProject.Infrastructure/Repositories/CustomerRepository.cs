@@ -2,6 +2,7 @@
 using BlazorProject.Application.Features.Customers;
 using BlazorProject.Domain.Entities;
 using BlazorProject.Infrastructure.Data;
+using BlazorProject.Shared.Dtos;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -11,11 +12,11 @@ using System.Threading.Tasks;
 
 namespace BlazorProject.Infrastructure.Repositories
 {
-	internal class CustomerRepository : ICustomerRepository
+	internal class CustomerRepository : BaseRepository<Customer>,  ICustomerRepository
 	{
-		private readonly ProjectContext _context;
-		public CustomerRepository(ProjectContext context) { _context = context; }
-		public async Task<IReadOnlyList<Customer>> GetCustomers(CustomerDto searchCriteria)
+		public CustomerRepository(ProjectContext context) : base(context) { }
+		
+		public async Task<(IReadOnlyList<Customer>, int)> GetCustomers(CustomerDto searchCriteria, int page, int pageSize)
 		{
 			var query = _context.Customers.AsQueryable();
 			if (searchCriteria.Id != 0)
@@ -30,8 +31,7 @@ namespace BlazorProject.Infrastructure.Repositories
 			{
 				query = query.Where(e => e.Name.Contains(searchCriteria.Name));
 			}
-			return await query.ToListAsync();
-			
+			return await base.GetAllAsync(query,page,pageSize);
 		}
 	}
 }

@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using BlazorProject.Application.Contracts;
-using BlazorProject.Application.Responses;
+using BlazorProject.Shared.Responses;
 using BlazorProject.Domain.Common;
 using MediatR;
 using System;

@@ -1,6 +1,7 @@
 ﻿using BlazorProject.Application.Contracts.Infrastructre;
 using BlazorProject.Application.Contracts.Mediator;
 using BlazorProject.Domain.Entities;
+using BlazorProject.Shared.Dtos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +19,7 @@ namespace BlazorProject.Application.Features.Invoices
         }
         public void CreateLogic(Invoice entity)
         {
+            entity.NetAmount = 0;
             foreach (var invoiceLine in entity.InvoiceLines)
             {
                 invoiceLine.Total = invoiceLine.Amount * invoiceLine.Quantity;
@@ -31,9 +33,9 @@ namespace BlazorProject.Application.Features.Invoices
             }
         }
 
-        public async Task<IReadOnlyList<Invoice>> GetAllLogic(InvoiceDto searchCriteria)
+        public async Task<(IReadOnlyList<Invoice>, int)> GetAllLogic(InvoiceDto searchCriteria, int page, int pageSize)
         {
-			return await _invoiceRepository.GetInvoices(searchCriteria);
+			return await _invoiceRepository.GetInvoices(searchCriteria,page,pageSize);
 		}
 
         public async Task<Invoice?> GetOneLogic(int id)

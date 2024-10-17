@@ -8,6 +8,6 @@ namespace BlazorProject.Application.Contracts.Mediator
 {
 	internal interface ICustomGetAllLogic<TEntity,TDto>
 	{
-		Task<IReadOnlyList<TEntity>> GetAllLogic(TDto searchCriteria);
+		Task<(IReadOnlyList<TEntity> Entities,int Count)> GetAllLogic(TDto searchCriteria, int page, int pageSize);
 	}
 }

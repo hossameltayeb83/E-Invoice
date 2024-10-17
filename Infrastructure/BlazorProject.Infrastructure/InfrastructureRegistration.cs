@@ -24,6 +24,8 @@ namespace BlazorProject.Infrastructure
 			services.AddScoped(typeof(IRepository<>),typeof(BaseRepository<>));
 			services.AddScoped<IInvoiceRepository,InvoiceRepository>();
 			services.AddScoped<ICustomerRepository,CustomerRepository>();
+			services.AddScoped<IItemRepository,ItemRepository>();
+			services.AddScoped<ITaxRepository,TaxRepository>();
 			return services;
 		}
 	}

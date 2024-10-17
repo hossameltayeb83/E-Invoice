@@ -1,6 +1,7 @@
 ﻿using BlazorProject.Application.Contracts.Infrastructre;
 using BlazorProject.Application.Contracts.Mediator;
 using BlazorProject.Domain.Entities;
+using BlazorProject.Shared.Dtos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,9 +18,9 @@ namespace BlazorProject.Application.Features.Taxes
             _taxRepository = taxRepository;
         }
 
-        public async Task<IReadOnlyList<Tax>> GetAllLogic(TaxDto searchCriteria)
+        public async Task<(IReadOnlyList<Tax>,int)> GetAllLogic(TaxDto searchCriteria, int page, int pageSize)
         {
-            return await _taxRepository.GetTaxes(searchCriteria);
+            return await _taxRepository.GetTaxes(searchCriteria, page, pageSize);
         }
     }
 }

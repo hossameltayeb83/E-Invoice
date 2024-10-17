@@ -16,9 +16,9 @@ namespace BlazorProject.Server.Controllers
 			_mediator = mediator;
 		}
 		[HttpGet]
-		public async Task<IActionResult> Get([FromQuery] TDto Dto,int pageCount=1,int pageSize=10)
+		public async Task<IActionResult> Get([FromQuery] TDto Dto,int page=1,int pageSize=10)
 		{
-			var result= await _mediator.Send(new GetAllQuery<TEntity, TDto>() { SerachCriteria=Dto,PageCount=pageCount,PageSize=10});
+			var result= await _mediator.Send(new GetAllQuery<TEntity, TDto>() { SerachCriteria=Dto,Page=page,PageSize=pageSize});
 			return Ok(result);
 		}
 

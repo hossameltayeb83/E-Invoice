@@ -3,6 +3,7 @@ using BlazorProject.Application.Features.Customers;
 using BlazorProject.Application.Features.Items;
 using BlazorProject.Application.Features.Taxes;
 using BlazorProject.Domain.Entities;
+using BlazorProject.Shared.Dtos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,8 +17,8 @@ namespace BlazorProject.Application.Features.Invoices
 		public InvoiceProfile()
 		{
 			CreateMap<Invoice, InvoiceDto>().ReverseMap();
-			CreateMap<InvoiceLine, InvoiceLineDto>().ReverseMap();
-			CreateMap<InvoiceLineTax, InvoiceLineTaxDto>().ReverseMap();
+			CreateMap<InvoiceLine, InvoiceLineDto>().ForMember(dest => dest.InvoiceLineId, option => option.MapFrom(src => src.Id)).ReverseMap();
+			CreateMap<InvoiceLineTax, InvoiceLineTaxDto>().ForMember(dest => dest.InvoiceLineTaxId, option => option.MapFrom(src => src.Id)).ReverseMap();
 		}
 	}
 }

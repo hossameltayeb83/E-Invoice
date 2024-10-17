@@ -3,6 +3,7 @@ using BlazorProject.Application.Features.Invoices;
 using BlazorProject.Application.Features.Items;
 using BlazorProject.Domain.Entities;
 using BlazorProject.Infrastructure.Data;
+using BlazorProject.Shared.Dtos;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -12,12 +13,12 @@ using System.Threading.Tasks;
 
 namespace BlazorProject.Infrastructure.Repositories
 {
-	internal class InvoiceRepository : IInvoiceRepository
+	internal class InvoiceRepository : BaseRepository<Invoice>, IInvoiceRepository
 	{
-		private readonly ProjectContext _context;
-		public InvoiceRepository(ProjectContext context) { _context = context; }
+		public InvoiceRepository(ProjectContext context) : base(context) { }
 
-		public async Task<IReadOnlyList<Invoice>> GetInvoices(InvoiceDto searchCriteria)
+
+		public async Task<(IReadOnlyList<Invoice>, int)> GetInvoices(InvoiceDto searchCriteria, int page, int pageSize)
 		{
 			var query = _context.Invoices.AsQueryable();
 			if (searchCriteria.Id != 0)
@@ -28,12 +29,15 @@ namespace BlazorProject.Infrastructure.Repositories
 			{
 				query = query.Where(e => e.Code == searchCriteria.Code);
 			}
-			return await query.ToListAsync();
+			return await base.GetAllAsync(query, page, pageSize);
 		}
 
 		public async ValueTask<Invoice?> GetInvoiceWithIncludes(int invoiceId)
 		{
-			return await _context.Invoices.Include(e=>e.InvoiceLines).ThenInclude(e=>e.InvoiceLineTaxes).FirstOrDefaultAsync(e=>e.Id==invoiceId);
+			return await _context.Invoices
+				.Include(e=>e.InvoiceLines)
+				.ThenInclude(e=>e.InvoiceLineTaxes)
+				.FirstOrDefaultAsync(e=>e.Id==invoiceId);
 		}
 	}
 }

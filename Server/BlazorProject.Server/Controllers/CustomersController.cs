@@ -1,6 +1,7 @@
 ﻿using BlazorProject.Application.Contracts.Mediator;
 using BlazorProject.Application.Features.Customers;
 using BlazorProject.Domain.Entities;
+using BlazorProject.Shared.Dtos;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

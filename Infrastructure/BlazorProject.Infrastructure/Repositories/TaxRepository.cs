@@ -3,6 +3,7 @@ using BlazorProject.Application.Features.Items;
 using BlazorProject.Application.Features.Taxes;
 using BlazorProject.Domain.Entities;
 using BlazorProject.Infrastructure.Data;
+using BlazorProject.Shared.Dtos;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -12,12 +13,13 @@ using System.Threading.Tasks;
 
 namespace BlazorProject.Infrastructure.Repositories
 {
-	internal class TaxRepository : ITaxRepository
+	internal class TaxRepository : BaseRepository<Tax>, ITaxRepository
 	{
-		private readonly ProjectContext _context;
-		public TaxRepository(ProjectContext context) { _context = context; }
+		public TaxRepository(ProjectContext context) : base(context) { }
 
-		public async Task<IReadOnlyList<Tax>> GetTaxes(TaxDto searchCriteria)
+
+
+		public async Task<(IReadOnlyList<Tax>, int)> GetTaxes(TaxDto searchCriteria, int page, int pageSize)
 		{
 			var query = _context.Taxes.AsQueryable();
 			if (searchCriteria.Id != 0)
@@ -32,7 +34,7 @@ namespace BlazorProject.Infrastructure.Repositories
 			{
 				query = query.Where(e => e.Name.Contains(searchCriteria.Name));
 			}
-			return await query.ToListAsync();
+			return await base.GetAllAsync(query,page,pageSize);
 		}
 	}
 }

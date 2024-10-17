@@ -1,6 +1,7 @@
 ﻿using BlazorProject.Application.Contracts.Infrastructre;
 using BlazorProject.Application.Contracts.Mediator;
 using BlazorProject.Domain.Entities;
+using BlazorProject.Shared.Dtos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,9 +17,9 @@ namespace BlazorProject.Application.Features.Items
         {
             _itemRepository = itemRepository;
         }
-        public async Task<IReadOnlyList<Item>> GetAllLogic(ItemDto searchCriteria)
+        public async Task<(IReadOnlyList<Item>,int)> GetAllLogic(ItemDto searchCriteria, int page, int pageSize)
         {
-            return await _itemRepository.GetItems(searchCriteria);
+            return await _itemRepository.GetItems(searchCriteria, page, pageSize);
         }
     }
 }
