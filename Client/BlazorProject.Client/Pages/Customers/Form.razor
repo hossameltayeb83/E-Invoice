@@ -1,0 +1,71 @@
+﻿@page "/Customers/Form"
+@page "/Customers/Form/{id:int}"
+@inject IService<CustomerDto> _customersService
+@inject NavigationManager _navManager
+    <div class="col-xl">
+        <div class="card mb-6">
+            <div class="card-header d-flex justify-content-between align-items-center">
+            <a href="/Customers" class="btn btn-secondary">Back To Customers</a>
+            </div>
+            <div class="card-body">
+                <EditForm Model="Model" OnValidSubmit="Submit">
+                    <FluentValidationValidator/>
+                    <div class="form-floating form-floating-outline col-md-6 mb-6">
+                        <InputText type="text" @bind-Value="Model.Name" class="form-control" id="name" placeholder="Hossam" />
+                        <label for="name">Name</label>
+                    <ValidationMessage For="@(() => Model.Name)"></ValidationMessage>
+                    </div>
+                    <div class="form-floating form-floating-outline col-md-6 mb-6">
+                        <InputText type="text" @bind-Value="Model.Code" class="form-control" id="code" placeholder="8415" />
+                        <label for="code">Code</label>
+                        <ValidationMessage For="@(() => Model.Code)"></ValidationMessage>
+                    </div>
+                   
+                    <button type="submit" class="btn btn-primary">@(IsEdit?"Save":"Add")</button>
+                @if (IsEdit)
+                {
+                    <button type="button" @onclick="Delete" class="btn btn-danger">Delete</button>
+                }
+            </EditForm>
+            </div>
+        </div>
+    </div>
+    
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+    public CustomerDto Model { get; set; } = new();
+    public bool IsEdit { get; set; }
+    protected async override Task OnParametersSetAsync()
+    {
+        if (Id != 0)
+        {
+            Model = await _customersService.GetOne(Id);
+            if (Model != null)
+                IsEdit = true;
+        }
+        base.OnParametersSet();
+    }
+    public async void Submit()
+    {
+        if (IsEdit)
+        {
+            Model.Id = Id;
+            await _customersService.Update(Model);
+        }
+        else
+        {
+            var id = await _customersService.Create(Model);
+            if (id != null)
+            {
+                _navManager.NavigateTo($"/Customers/Form/{id}");
+            }
+        }
+    }
+    public async Task Delete()
+    {
+        if(await _customersService.Delete(Id))
+            _navManager.NavigateTo($"/Customers");
+    }
+}

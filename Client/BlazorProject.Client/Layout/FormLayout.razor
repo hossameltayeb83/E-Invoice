@@ -1,0 +1,68 @@
+﻿
+@inherits LayoutComponentBase
+@layout MainLayout
+@typeparam TDto where TDto:IDto
+@inject NavigationManager _navManager
+<div class="col-xl">
+    <div class="card mb-6">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <a href="/@Resource" class="btn btn-secondary">Back To @Resource</a>
+        </div>
+        <div class="card-body">
+            <EditForm Model="Model" OnValidSubmit="Submit">
+                <FluentValidationValidator />
+                @Body
+
+                <button type="submit" class="btn btn-primary">@(IsEdit ? "Save" : "Add")</button>
+                @if (IsEdit)
+                {
+                    <button type="button" @onclick="DeleteItem" class="btn btn-danger">Delete</button>
+                }
+            </EditForm>
+        </div>
+    </div>
+</div>
+
+
+@code {
+    [Parameter]
+    public string Resource { get; set; } = "Items";
+    [Parameter]
+    public int Id { get; set; }
+    [Parameter]
+    public IService<TDto> _service { get; set; }
+    public TDto Model { get; set; }
+    public bool IsEdit { get; set; }
+    protected async override Task OnParametersSetAsync()
+    {
+        if (Id != 0)
+        {
+            Model = await _service.GetOne(Id);
+            if (Model != null)
+                IsEdit = true;
+        }
+        base.OnParametersSet();
+    }
+    public async void Submit()
+    {
+        if (IsEdit)
+        {
+            Model.Id = Id;
+            await _service.Update(Model);
+        }
+        else
+        {
+            var id = await _service.Create(Model);
+            if (id != null)
+            {
+                _navManager.NavigateTo($"/{Resource}/Form/{id}");
+            }
+        }
+    }
+    public async Task DeleteItem()
+    {
+        if (await _service.Delete(Id))
+            _navManager.NavigateTo($"/{Resource}");
+    }
+}
+

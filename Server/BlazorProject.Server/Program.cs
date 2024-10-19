@@ -1,6 +1,7 @@
 
 using BlazorProject.Application;
 using BlazorProject.Infrastructure;
+using BlazorProject.Server.Middlewares;
 using BlazorProject.Shared;
 
 namespace BlazorProject.Server
@@ -18,6 +19,8 @@ namespace BlazorProject.Server
 			builder.Services.AddInfrastructureServices(builder.Configuration);
 			builder.Services.AddSharedServices();
 
+			builder.Services.AddCors(
+				options=> options.AddPolicy("BlazorApp",policy=>policy.WithOrigins(builder.Configuration["BlazorApp"]!).AllowAnyMethod().AllowAnyHeader().AllowCredentials().SetIsOriginAllowed(policy=>true)));
 
 			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 			builder.Services.AddEndpointsApiExplorer();
@@ -31,10 +34,11 @@ namespace BlazorProject.Server
 				app.UseSwagger();
 				app.UseSwaggerUI();
 			}
+			app.UseCustomExceptionHandler();
 
 			app.UseHttpsRedirection();
-
-			app.UseAuthorization();
+            app.UseCors("BlazorApp");
+            app.UseAuthorization();
 
 
 			app.MapControllers();

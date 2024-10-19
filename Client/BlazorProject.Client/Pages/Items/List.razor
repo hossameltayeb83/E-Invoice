@@ -1,0 +1,25 @@
+﻿@if (Items != null)
+{
+    @foreach(var item in Items)
+    {
+        <tr>
+            <td>@item.Name</td>
+            <td>@item.Code</td>
+            <td>@item.DefaultAmount.ToString("C")</td>
+            <td>
+                <a class="rounded-pill btn-outline-info"  href="/Items/Form/@item.Id"><i class="ri-pencil-line m-1_5"></i></a>
+                <button class="rounded-pill btn-outline-danger" @onclick="()=>Delete(item.Id)"><i class="ri-delete-bin-6-line m-1_5"></i></button>
+            </td>
+        </tr>
+    }
+}
+@code {
+    [Parameter]
+    public List<ItemDto> Items { get; set; }
+    [Parameter]
+    public EventCallback<int> Deleted { get; set; }
+    public void Delete(int id)
+    {
+        Deleted.InvokeAsync(id);
+    } 
+}

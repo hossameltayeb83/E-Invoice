@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BlazorProject.Application.Contracts;
 using BlazorProject.Application.Contracts.Mediator;
+using BlazorProject.Application.Exceptions;
 using BlazorProject.Shared.Responses;
 using BlazorProject.Domain.Common;
 using MediatR;
@@ -39,7 +40,7 @@ namespace BlazorProject.Application.Common.Mediator.Command
 			var response = new BaseResponse<int>();
 			var validationResult = _validator.Validate(request.Dto);
 			if (!validationResult.IsValid)
-				throw new Exception("failed");
+				throw new CustomValidationException(validationResult);
 			var entity = _mapper.Map<T>(request.Dto);
 			if(_handlerLogic is ICustomCreateLogic<T> _handler)
 			{

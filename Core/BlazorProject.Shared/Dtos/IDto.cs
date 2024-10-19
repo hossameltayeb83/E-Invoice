@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace BlazorProject.Shared.Dtos
 {
-	internal class tes
-	{
-	}
+    public interface IDto
+    {
+        int Id { get; set; }
+        string ToQueryParameters();
+    }
 }

@@ -6,13 +6,18 @@ using System.Threading.Tasks;
 
 namespace BlazorProject.Shared.Dtos
 {
-    public class InvoiceDto
+    public class InvoiceDto : IDto
     {
         public int Id { get; set; }
         public int CustomerId { get; set; }
         public string? Code { get; set; }
         public decimal NetAmount { get; set; }
         public List<InvoiceLineDto>? InvoiceLines { get; set; }
+
+        public string ToQueryParameters()
+        {
+            throw new NotImplementedException();
+        }
     }
     public class InvoiceLineDto
     {

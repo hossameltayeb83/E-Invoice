@@ -19,6 +19,9 @@ namespace BlazorProject.Shared.Validators
             RuleFor(p => p.Code)
                 .NotEmpty().WithMessage("{PropertyName} is required.")
                 .MaximumLength(50).WithMessage("{PropertyName} must not exceed 200 characters.");
+            RuleFor(e => e.DefaultAmount)
+                
+                .GreaterThanOrEqualTo(0).WithMessage("Item default amount must be a postive value.");
         }
     }
 }

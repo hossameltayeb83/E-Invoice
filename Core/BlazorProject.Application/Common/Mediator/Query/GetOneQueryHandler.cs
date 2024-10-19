@@ -2,6 +2,7 @@
 using BlazorProject.Application.Common.Mediator.Command;
 using BlazorProject.Application.Contracts;
 using BlazorProject.Application.Contracts.Mediator;
+using BlazorProject.Application.Exceptions;
 using BlazorProject.Domain.Common;
 using BlazorProject.Shared.Responses;
 using MediatR;
@@ -44,8 +45,7 @@ namespace BlazorProject.Application.Common.Mediator.Query
 			}
 			if (entity == null)
 			{
-				response.Success = false;
-				return response;
+				throw new NotFoundException($"Resource doesn't exist");
 			}
 			var dto = _mapper.Map<U>(entity);
 

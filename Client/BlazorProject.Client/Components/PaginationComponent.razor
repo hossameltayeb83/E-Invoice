@@ -1,0 +1,57 @@
+﻿@if (Pagination != null)
+{
+    
+<nav aria-label="Page navigatio m-2">
+    <ul class="pagination justify-content-end">
+        <div>
+            <label>
+
+                <input @bind-value="Pagination.PageSize" @bind-value:event="oninput" @onchange="SizeChanged"  class=" w-50 justify-content-end form-control form-control-sm"/>
+            </label>
+            Entries
+                    @* <option value="5">5</option>
+                    <option value="10">10</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option> *@
+                @* </input> *@
+
+        </div>
+        <li class="page-item @(Pagination.HasPreviousPage?"":"disabled") prev">
+                <a class="page-link" @onclick="()=>PageClicked(Pagination.Page-1)">
+                <i class="tf-icon ri-skip-back-mini-line ri-22px"></i>
+            </a>
+        </li>
+            @for(int i = 1; i <= Pagination.TotalPages; i++)
+            {
+                var pageNumber = i;
+                <li class="page-item @(Pagination.Page==pageNumber?"active":"")">
+                    <a @onclick="()=>PageClicked(pageNumber)" class="page-link">@pageNumber</a>
+                </li>
+            }
+        
+            <li class="page-item @(Pagination.HasNextPage?"":"disabled") next">
+                <a class="page-link" @onclick="()=>PageClicked(Pagination.Page+1)">
+                <i class="tf-icon ri-skip-forward-mini-line ri-22px"></i>
+            </a>
+        </li>
+    </ul>
+</nav>
+}
+
+@code {
+    [Parameter]
+    public PaginationInfo Pagination { get; set; }
+    [Parameter]
+    public EventCallback PaginationChanged { get; set; }
+    public EventCallback<int> PageClick { get; set; }
+    public EventCallback<int> SizeChange { get; set; }
+    public void PageClicked(int page)
+    {
+        Pagination.Page = page;
+        PaginationChanged.InvokeAsync();
+    }
+    public void SizeChanged()
+    {
+        PaginationChanged.InvokeAsync();
+    }
+}

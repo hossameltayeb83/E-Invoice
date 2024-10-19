@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FluentValidation;
+using BlazorProject.Application.Exceptions;
 
 namespace BlazorProject.Application.Common.Mediator.Command
 {
@@ -38,10 +39,10 @@ namespace BlazorProject.Application.Common.Mediator.Command
 		public async Task<BaseResponse> Handle(UpdateCommand<T, U> request, CancellationToken cancellationToken)
 		{
 			var response = new BaseResponse();
-            var validationResult = _validator.Validate(request.Dto);
-            if (!validationResult.IsValid)
-                throw new Exception("failed");
-            var entity = _mapper.Map<T>(request.Dto);
+			var validationResult = _validator.Validate(request.Dto);
+			if (!validationResult.IsValid)
+				throw new CustomValidationException(validationResult);
+			var entity = _mapper.Map<T>(request.Dto);
 			if (_handlerLogic is ICustomUpdateLogic<T> _handler)
 			{
 				_handler.UpdateLogic(entity);

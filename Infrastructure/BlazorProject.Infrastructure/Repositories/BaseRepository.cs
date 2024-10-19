@@ -43,8 +43,11 @@ namespace BlazorProject.Infrastructure.Repositories
 								Count = e.Count(),
 								Items = e.Skip((page - 1) * pageSize).Take(pageSize).ToList()
 							}).FirstOrDefaultAsync();
-			return (result.Items, result.Count);
-		}
+            if (result != null)
+                return (result.Items, result.Count);
+            else
+                return (new List<T>(), 0);
+        }
 
 		protected async Task<(IReadOnlyList<T>, int)> GetAllAsync(IQueryable<T> query, int page, int pageSize)
 		{
@@ -56,7 +59,10 @@ namespace BlazorProject.Infrastructure.Repositories
 								Items = e.Skip((page - 1) * pageSize).Take(pageSize).ToList()
 							})
 				.FirstOrDefaultAsync();
-			return (result.Items, result.Count);
+			if (result != null)
+				return (result.Items, result.Count);
+			else
+				return (new List<T>(), 0);
 		}
 		public async Task<bool> UpdateAsync(T entity)
 		{

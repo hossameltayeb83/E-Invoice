@@ -1,0 +1,79 @@
+﻿@page "/Items/Form"
+@page "/Items/Form/{id:int}"
+@inject IService<ItemDto> _itemsService
+@inject NavigationManager _navManager
+    <div class="col-xl">
+        <div class="card mb-6">
+            <div class="card-header d-flex justify-content-between align-items-center">
+            <a href="/Items" class="btn btn-secondary">Back To Items</a>
+            </div>
+            <div class="card-body">
+                <EditForm Model="Item" OnValidSubmit="Submit">
+                    <FluentValidationValidator/>
+                    <div class="form-floating form-floating-outline col-md-6 mb-6">
+                        <InputText type="text" @bind-Value="Item.Name" class="form-control" id="name" placeholder="Fridge" />
+                        <label for="name">Name</label>
+                    <ValidationMessage For="@(() => Item.Name)"></ValidationMessage>
+                    </div>
+                    <div class="form-floating form-floating-outline col-md-6 mb-6">
+                        <InputText type="text" @bind-Value="Item.Code" class="form-control" id="code" placeholder="8415" />
+                        <label for="code">Code</label>
+                        <ValidationMessage For="@(() => Item.Code)"></ValidationMessage>
+                    </div>
+                    <div class="form-floating form-floating-outline col-md-6 mb-6">
+                        <InputNumber type="text"
+                               @bind-Value="Item.DefaultAmount"
+                               id="default-amount"
+                               class="form-control"/>
+                        <label for="default-amount">Default Amount</label>
+                    <ValidationMessage For="@(() => Item.DefaultAmount)"></ValidationMessage>
+                    </div>
+                   
+                    <button type="submit" class="btn btn-primary">@(IsEdit?"Save":"Add")</button>
+                @if (IsEdit)
+                {
+                    <button type="button" @onclick="DeleteItem" class="btn btn-danger">Delete</button>
+                }
+            </EditForm>
+            </div>
+        </div>
+    </div>
+    
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+    public ItemDto Item { get; set; } = new();
+    public bool IsEdit { get; set; }
+    protected async override Task OnParametersSetAsync()
+    {
+        if (Id != 0)
+        {
+            Item = await _itemsService.GetOne(Id);
+            if (Item != null)
+                IsEdit = true;
+        }
+        base.OnParametersSet();
+    }
+    public async void Submit()
+    {
+        if (IsEdit)
+        {
+            Item.Id = Id;
+            await _itemsService.Update(Item);
+        }
+        else
+        {
+            var id = await _itemsService.Create(Item);
+            if (id != null)
+            {
+                _navManager.NavigateTo($"/Items/Form/{id}");
+            }
+        }
+    }
+    public async Task DeleteItem()
+    {
+        if(await _itemsService.Delete(Id))
+            _navManager.NavigateTo($"/Items");
+    }
+}

@@ -1,0 +1,18 @@
+﻿
+    @* <h5 class="card-header">Table Basic</h5> *@
+    <div class="table-responsive text-nowrap">
+        <table class="table">
+            @ChildContent
+        </table>
+
+    </div>
+
+
+@code {
+    [Parameter]
+    public string TableFor { get; set; }
+    [Parameter]
+    public string CreateFor { get; set; }
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+}

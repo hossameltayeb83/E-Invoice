@@ -1,0 +1,63 @@
+﻿@page "/Items"
+@inject IService<ItemDto> _itemsService
+<FiltersComponent SearchSubmited="OnPaginatedSearch" FilterFor="Items">
+	<div class="col-md-6">
+		<label for="name">Name</label>
+		<input type="text" @bind-value=@SearchCriteria.Name id="name" class="form-control" />
+	</div>
+	<div class="col-md-6">
+		<label for="code">Code</label>
+		<input type="text" @bind-value=@SearchCriteria.Code id="code" class="form-control" />
+	</div>
+</FiltersComponent>
+
+<div class="card">
+    <div class="card-header">
+        <a class="btn btn-primary" href="/Items/Form"><i class="ri-add-line me-md-1_5"></i>Create Item</a>
+        
+    </div>
+<TableComponent>
+	<thead>
+		<tr>
+			<th>Name</th>
+			<th>Code</th>
+			<th>Default Amount</th>
+			<th>Actions</th>
+		</tr>
+	</thead>
+	<tbody class="table-border-bottom-0">
+		<List Deleted="OnDelete" Items="Items"></List>
+	</tbody>
+</TableComponent>
+	<div class="card-footer">
+		<PaginationComponent Pagination="Pagination" PaginationChanged="OnPaginatedSearch"></PaginationComponent>
+	</div>
+</div>
+@code {
+	public List<ItemDto> Items { get; set; }
+	public ItemDto SearchCriteria { get; set; } = new();
+	public PaginationInfo Pagination { get; set; } = new();
+
+	protected async override Task OnInitializedAsync()
+	{
+		var response = await _itemsService.GetAll();
+		if (response.Result != null)
+		{
+			Items = response.Result;
+			Pagination = response.Pagination!;
+		}
+	}
+	public async Task OnPaginatedSearch()
+	{
+		var response = await _itemsService.GetAllWithSearch(SearchCriteria, Pagination.Page, Pagination.PageSize);
+		if (response.Result != null)
+		{
+			Items = response.Result;
+			Pagination = response.Pagination!;
+		}
+	}
+	public async Task OnDelete(int id)
+	{
+		await _itemsService.Delete(id);
+	}
+}
