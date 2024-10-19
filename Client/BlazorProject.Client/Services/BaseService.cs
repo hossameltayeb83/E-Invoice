@@ -7,8 +7,8 @@ namespace BlazorProject.Client.Services
 {
     public class BaseService<TDto> :IService<TDto> where TDto : class, IDto 
     {
-        private readonly HttpClient _client;
-        private string _url;
+        protected readonly HttpClient _client;
+        protected string _url;
         public BaseService(HttpClient client,string resource)
         {
             _client = client;
@@ -65,6 +65,19 @@ namespace BlazorProject.Client.Services
         {
             var response = await _client.DeleteFromJsonAsync<BaseResponse>(_url + $"/{id}");
             return response.Success;
+        }
+
+        public async Task<List<TDto>?> GetList(string column, string value)
+        {
+            
+            var queryParam = $"?{column}={value}";
+            var response = await _client.GetFromJsonAsync<PaginatedResponse<List<TDto>>>(_url + queryParam);
+            if (response.Success)
+            {
+                return response.Result;
+            }
+            return null;
+            
         }
     }
 }

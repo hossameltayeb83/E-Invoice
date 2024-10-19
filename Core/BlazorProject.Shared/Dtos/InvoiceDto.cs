@@ -6,12 +6,18 @@ using System.Threading.Tasks;
 
 namespace BlazorProject.Shared.Dtos
 {
+    public enum InvoiceType
+    {
+		sale, refund
+	}
     public class InvoiceDto : IDto
     {
         public int Id { get; set; }
         public int CustomerId { get; set; }
+        public string? CustomerName { get; set; }
         public string? Code { get; set; }
         public decimal NetAmount { get; set; }
+        public InvoiceType Type { get; set; }
         public List<InvoiceLineDto>? InvoiceLines { get; set; }
 
         public string ToQueryParameters()

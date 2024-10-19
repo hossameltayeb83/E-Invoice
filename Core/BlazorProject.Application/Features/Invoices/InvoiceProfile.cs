@@ -16,7 +16,7 @@ namespace BlazorProject.Application.Features.Invoices
 	{
 		public InvoiceProfile()
 		{
-			CreateMap<Invoice, InvoiceDto>().ReverseMap();
+			CreateMap<Invoice, InvoiceDto>().ForMember(dest => dest.CustomerName,option=>option.MapFrom(src=>src.Customer.Name)).ReverseMap();
 			CreateMap<InvoiceLine, InvoiceLineDto>().ForMember(dest => dest.InvoiceLineId, option => option.MapFrom(src => src.Id)).ReverseMap();
 			CreateMap<InvoiceLineTax, InvoiceLineTaxDto>().ForMember(dest => dest.InvoiceLineTaxId, option => option.MapFrom(src => src.Id)).ReverseMap();
 		}

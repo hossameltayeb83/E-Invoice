@@ -20,7 +20,7 @@ namespace BlazorProject.Infrastructure.Repositories
 
 		public async Task<(IReadOnlyList<Invoice>, int)> GetInvoices(InvoiceDto searchCriteria, int page, int pageSize)
 		{
-			var query = _context.Invoices.AsQueryable();
+			var query = _context.Invoices.Include(e=>e.Customer).AsQueryable();
 			if (searchCriteria.Id != 0)
 			{
 				query = query.Where(e => e.Id == searchCriteria.Id);

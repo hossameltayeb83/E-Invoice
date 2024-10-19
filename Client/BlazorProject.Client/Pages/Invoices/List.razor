@@ -1,0 +1,27 @@
+﻿@if (Invoices != null)
+{
+    @foreach (var invoice in Invoices)
+    {
+        <tr>
+            <td>@invoice.CustomerName</td>
+            <td>@invoice.Code</td>
+            <td>@invoice.Type</td>
+            <td>
+
+                <a class="rounded-pill btn-outline-info" href="/Invoices/Form/@invoice.Id"><i class="ri-pencil-line m-1_5"></i></a>
+                <button class="rounded-pill btn-outline-danger" @onclick="()=>Delete(invoice.Id)"><i class="ri-delete-bin-6-line m-1_5"></i></button>
+
+            </td>
+        </tr>
+    }
+}
+@code {
+    [Parameter]
+    public List<InvoiceDto> Invoices { get; set; }
+    [Parameter]
+    public EventCallback<int> Deleted { get; set; }
+    public void Delete(int id)
+    {
+        Deleted.InvokeAsync(id);
+    }
+}
