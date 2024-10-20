@@ -41,6 +41,7 @@ namespace BlazorProject.Infrastructure.Repositories
 		public async ValueTask<Invoice?> GetInvoiceWithIncludes(int invoiceId)
 		{
 			return await _context.Invoices
+				.Include(e=>e.Customer)
 				.Include(e=>e.InvoiceLines)
 				.ThenInclude(e=>e.InvoiceLineTaxes)
 				.FirstOrDefaultAsync(e=>e.Id==invoiceId);

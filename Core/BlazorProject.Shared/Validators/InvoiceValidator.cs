@@ -19,6 +19,8 @@ namespace BlazorProject.Shared.Validators
                 .NotEmpty().WithMessage("Customer is required.");
             RuleFor(p => p.InvoiceLines)
                 .NotEmpty().WithMessage("Invoice must contain atleast one item.");
+            RuleFor(p=>p.InvoiceLines)
+                .Must(HaveUniqueItemIds).WithMessage("Same Item can't be entered more than one time in the same invoice.");
             RuleForEach(e => e.InvoiceLines)
                 .ChildRules(invoiceLine =>
                 {
@@ -29,6 +31,8 @@ namespace BlazorProject.Shared.Validators
                                     .Must(e=>e%1==0).WithMessage("Item {PropertyName} must be a whole postive value.");
                     invoiceLine.RuleFor(e => e.ItemName)
                                     .NotEmpty().WithMessage("Item must have a name.");
+                    invoiceLine.RuleFor(p => p.InvoiceLineTaxes)
+                                    .Must(HaveUniqueTaxIds).WithMessage("Same Item can't have the same tax more than once.");
                     invoiceLine.RuleForEach(e => e.InvoiceLineTaxes)
                         .ChildRules(invoiceLineTax =>
                             {
@@ -41,5 +45,22 @@ namespace BlazorProject.Shared.Validators
                             });
                 });
         }
+        private bool HaveUniqueItemIds(List<InvoiceLineDto> items)
+        {
+            if (items == null || items.Count == 0)
+                return true;
+
+            var ids = items.Select(i => i.ItemId).ToList();
+            return ids.Distinct().Count() == ids.Count;
+        }
+        private bool HaveUniqueTaxIds(List<InvoiceLineTaxDto> items)
+        {
+            if (items == null || items.Count == 0)
+                return true;
+
+            var ids = items.Select(i => i.TaxId).ToList();
+            return ids.Distinct().Count() == ids.Count;
+        }
+
     }
 }

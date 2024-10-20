@@ -16,7 +16,7 @@
             <div class="col-md-3 col-12 mb-md-0 mb-4">
                 <p class="h6 repeater-title">Rate</p>
                 <div class="input-group input-group input-group-merge ">
-                    <InputNumber @bind-Value=Model.TaxRate type="number" class="form-control" id="TaxRate" />
+                    <InputNumber @bind-Value=Model.TaxRate type="number" @oninput="HandleRateChange" class="form-control" id="TaxRate" />
                     <span class="input-group-text">%</span>
                 </div>
 
@@ -25,7 +25,7 @@
 
             <div class="col-md-2 col-12 mb-md-0 mb-4">
                 <p class="h6 repeater-title">Amount</p>
-                <InputNumber @bind-Value=Model.Amount type="text" class="form-control invoice-item-qty" placeholder="1"/>
+                <InputNumber @bind-Value=Model.Amount type="text" @oninput="HandleAmountChange" class="form-control invoice-item-qty" placeholder="1" />
             </div>
         </div>
         <div class="d-flex flex-column align-items-center justify-content-between border-start p-2">
@@ -64,22 +64,22 @@
     }
     public void HandleAmountChange(ChangeEventArgs e)
     {
-        if (decimal.TryParse(e.Value.ToString(), out var value))
+        if (decimal.TryParse(e.Value.ToString(), out var amount))
         {
-            if (value < InvoiceLine.Amount)
+            if (amount < InvoiceLine.Amount)
             {
-                Model.Amount = value;
-                Model.TaxRate = (InvoiceLine.Amount *100)/value;
+                Model.Amount = amount;
+                Model.TaxRate = (amount *100)/InvoiceLine.Amount;
                 OnTaxAmountChanged.InvokeAsync();
             }
         }
     }
     public void HandleRateChange(ChangeEventArgs e)
     {
-        if (int.TryParse(e.Value.ToString(), out var value))
+        if (decimal.TryParse(e.Value.ToString(), out var rate))
         {
-            Model.TaxRate = value;
-            Model.Amount = InvoiceLine.Amount * (value / 100);
+            Model.TaxRate = rate;
+            Model.Amount = InvoiceLine.Amount * (rate / 100);
             OnTaxAmountChanged.InvokeAsync();
         }
     }

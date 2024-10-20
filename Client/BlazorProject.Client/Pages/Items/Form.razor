@@ -16,9 +16,13 @@
                     <ValidationMessage For="@(() => Item.Name)"></ValidationMessage>
                     </div>
                     <div class="form-floating form-floating-outline col-md-6 mb-6">
-                        <InputText type="text" @bind-Value="Item.Code" class="form-control" id="code" placeholder="8415" />
+                        <InputText type="text" @bind-Value="Item.Code" @oninput="CheckCodeIsUnique" class="form-control" id="code" placeholder="8415" />
                         <label for="code">Code</label>
                         <ValidationMessage For="@(() => Item.Code)"></ValidationMessage>
+                        @if (!string.IsNullOrEmpty(CodeErrorMessage))
+                        {
+                            <div class="text-danger">@CodeErrorMessage</div>
+                        }
                     </div>
                     <div class="form-floating form-floating-outline col-md-6 mb-6">
                         <InputNumber type="text"
@@ -45,6 +49,7 @@
     public int Id { get; set; }
     public ItemDto Item { get; set; } = new();
     public bool IsEdit { get; set; }
+    public string CodeErrorMessage { get; set; }
     protected async override Task OnParametersSetAsync()
     {
         if (Id != 0)
@@ -57,23 +62,34 @@
     }
     public async void Submit()
     {
-        if (IsEdit)
-        {
-            Item.Id = Id;
-            await _itemsService.Update(Item);
-        }
-        else
-        {
-            var id = await _itemsService.Create(Item);
-            if (id != null)
+        if(string.IsNullOrEmpty(CodeErrorMessage))
+            if (IsEdit)
             {
-                _navManager.NavigateTo($"/Items/Form/{id}");
+                Item.Id = Id;
+                await _itemsService.Update(Item);
             }
-        }
+            else
+            {
+                var id = await _itemsService.Create(Item);
+                if (id != null)
+                {
+                    _navManager.NavigateTo($"/Items/Form/{id}");
+                }
+            }
     }
     public async Task DeleteItem()
     {
         if(await _itemsService.Delete(Id))
             _navManager.NavigateTo($"/Items");
+    }
+    public async Task CheckCodeIsUnique(ChangeEventArgs e)
+    {
+        var items=await _itemsService.GetAllWithSearch(new ItemDto { Code = e.Value.ToString() }, 1, 1);
+        
+        if (items.Result != null && items.Result.Any())
+            CodeErrorMessage = "An Item With This Code Already Exist.";
+        else
+            CodeErrorMessage = string.Empty;
+
     }
 }

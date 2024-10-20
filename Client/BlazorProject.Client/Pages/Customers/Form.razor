@@ -16,9 +16,13 @@
                     <ValidationMessage For="@(() => Model.Name)"></ValidationMessage>
                     </div>
                     <div class="form-floating form-floating-outline col-md-6 mb-6">
-                        <InputText type="text" @bind-Value="Model.Code" class="form-control" id="code" placeholder="8415" />
+                    <InputText type="text" @bind-Value="Model.Code" @oninput="CheckCodeIsUnique" class="form-control" id="code" placeholder="8415" />
                         <label for="code">Code</label>
                         <ValidationMessage For="@(() => Model.Code)"></ValidationMessage>
+                    @if (!string.IsNullOrEmpty(CodeErrorMessage))
+                    {
+                        <div class="text-danger">@CodeErrorMessage</div>
+                    }
                     </div>
                    
                     <button type="submit" class="btn btn-primary">@(IsEdit?"Save":"Add")</button>
@@ -37,6 +41,8 @@
     public int Id { get; set; }
     public CustomerDto Model { get; set; } = new();
     public bool IsEdit { get; set; }
+    public string CodeErrorMessage { get; set; }
+
     protected async override Task OnParametersSetAsync()
     {
         if (Id != 0)
@@ -47,25 +53,37 @@
         }
         base.OnParametersSet();
     }
+
     public async void Submit()
     {
-        if (IsEdit)
-        {
-            Model.Id = Id;
-            await _customersService.Update(Model);
-        }
-        else
-        {
-            var id = await _customersService.Create(Model);
-            if (id != null)
+        if (string.IsNullOrEmpty(CodeErrorMessage))
+            if (IsEdit)
             {
-                _navManager.NavigateTo($"/Customers/Form/{id}");
+                Model.Id = Id;
+                await _customersService.Update(Model);
             }
-        }
+            else
+            {
+                var id = await _customersService.Create(Model);
+                if (id != null)
+                {
+                    _navManager.NavigateTo($"/Customers/Form/{id}");
+                }
+            }
     }
     public async Task Delete()
     {
         if(await _customersService.Delete(Id))
             _navManager.NavigateTo($"/Customers");
+    }
+    public async Task CheckCodeIsUnique(ChangeEventArgs e)
+    {
+        var items = await _customersService.GetAllWithSearch(new CustomerDto { Code = e.Value.ToString() }, 1, 1);
+
+        if (items.Result != null && items.Result.Any())
+            CodeErrorMessage = "A Customer With This Code Already Exist.";
+        else
+            CodeErrorMessage = string.Empty;
+
     }
 }
