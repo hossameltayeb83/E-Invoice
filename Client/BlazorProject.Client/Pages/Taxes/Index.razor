@@ -58,6 +58,10 @@
 	}
 	public async Task OnDelete(int id)
 	{
-		await _service.Delete(id);
+		if (await _service.Delete(id))
+		{
+			var tax = Taxes.FirstOrDefault(e => e.Id == id);
+			Taxes.Remove(tax);
+		}
 	}
 }

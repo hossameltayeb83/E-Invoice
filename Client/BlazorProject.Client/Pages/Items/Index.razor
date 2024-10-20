@@ -58,6 +58,10 @@
 	}
 	public async Task OnDelete(int id)
 	{
-		await _itemsService.Delete(id);
+		if (await _itemsService.Delete(id))
+		{
+			var item = Items.FirstOrDefault(e => e.Id == id);
+			Items.Remove(item);
+		}
 	}
 }

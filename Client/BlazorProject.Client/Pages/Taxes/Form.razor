@@ -28,7 +28,7 @@
                     <label for="default-rate">Default Rate</label>
                     <ValidationMessage For="@(() => Model.DefaultRate)"></ValidationMessage>
                 </div>
-                <button type="submit" class="btn btn-primary">@(IsEdit ? "Save" : "Add")</button>
+                <button type="submit" class="btn me-2 btn-primary">@(IsEdit ? "Save" : "Add")</button>
                 @if (IsEdit)
                 {
                     <button type="button" @onclick="Delete" class="btn btn-danger">Delete</button>

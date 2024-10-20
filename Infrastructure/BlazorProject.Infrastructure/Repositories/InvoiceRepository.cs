@@ -29,6 +29,12 @@ namespace BlazorProject.Infrastructure.Repositories
 			{
 				query = query.Where(e => e.Code == searchCriteria.Code);
 			}
+			if (searchCriteria.CustomerName != null)
+			{
+				query = query.Where(e => e.Customer.Name.Contains(searchCriteria.CustomerName));
+			}
+			
+			
 			return await base.GetAllAsync(query, page, pageSize);
 		}
 

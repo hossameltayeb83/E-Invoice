@@ -28,8 +28,8 @@
                         <label for="default-amount">Default Amount</label>
                     <ValidationMessage For="@(() => Item.DefaultAmount)"></ValidationMessage>
                     </div>
-                   
-                    <button type="submit" class="btn btn-primary">@(IsEdit?"Save":"Add")</button>
+
+                    <button type="submit" class="btn me-2 btn-primary">@(IsEdit ? "Save" : "Add")</button>
                 @if (IsEdit)
                 {
                     <button type="button" @onclick="DeleteItem" class="btn btn-danger">Delete</button>

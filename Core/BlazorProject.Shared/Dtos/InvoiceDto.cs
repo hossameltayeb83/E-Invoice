@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace BlazorProject.Shared.Dtos
 {
     public enum InvoiceType
     {
-		sale, refund
+		sale=0, refund=1
 	}
     public class InvoiceDto : IDto
     {
@@ -17,12 +18,22 @@ namespace BlazorProject.Shared.Dtos
         public string? CustomerName { get; set; }
         public string? Code { get; set; }
         public decimal NetAmount { get; set; }
+        public DateTime DateTimeIssued { get; set; }
         public InvoiceType Type { get; set; }
         public List<InvoiceLineDto>? InvoiceLines { get; set; }
 
         public string ToQueryParameters()
         {
-            throw new NotImplementedException();
+            StringBuilder sb = new StringBuilder();
+            sb.Append("?");
+            if (Code != null)
+                sb.Append($"Code={Code}");
+            if (CustomerName != null)
+                if (sb.Length > 1)
+                    sb.Append($"&CustomerName={CustomerName}");
+                else
+                    sb.Append($"CustomerName={CustomerName}");
+            return sb.ToString();
         }
     }
     public class InvoiceLineDto

@@ -1,5 +1,131 @@
-﻿<h3>InvoiceLine</h3>
+﻿@inject IService<ItemDto> _itemService
+<div class="mb-4" data-repeater-list="group-a">
+    <div class="repeater-wrapper pt-0 pt-md-9" data-repeater-item>
+        <div class="d-flex border rounded position-relative pe-0">
+            <div class="row w-100 p-5 gx-5">
+                <div class="col-md-4 col-12 mb-md-0 mb-4">
+                    <p class="h6 repeater-title">Item</p>
+                    <AutoComplete @bind-Value="Model.ItemName"
+                                  TItem="ItemDto"
+                                  DataProvider="ItemsDataProvider"
+                                  PropertyName="Name"
+                                  Placeholder="Choose an item"
+                                  OnChanged="(ItemDto Item) => OnAutoCompleteChanged(Item)" />
+
+                </div>
+                <div class="col-md-3 col-12 mb-md-0 mb-4">
+                    <p class="h6 repeater-title">Amount</p>
+                    <InputNumber type="number" @bind-Value="Model.Amount" @oninput="HandleAmountChange" class="form-control invoice-item-price mb-5"/>
+
+                </div>
+                <div class="col-md-2 col-12 mb-md-0 mb-4">
+                    <p class="h6 repeater-title">Quantity</p>
+                    <InputNumber @bind-Value="Model.Quantity" type="Number" @oninput="HandleQuantityChange" class="form-control invoice-item-qty" min="1" />
+                </div>
+                <div class="col-md-3 col-12 pe-0">
+                    <p class="h6 repeater-title">Item Net Amount</p>
+                    <p class="mb-0 mt-2 text-heading">$@(Model.ItemNetAmount)</p>
+                </div>
+                @if (Model.InvoiceLineTaxes!=null)
+                {
+                    @foreach(var invoiceLineTax in Model.InvoiceLineTaxes)
+                    {
+                        <InvoiceLineTax OnTaxAmountChanged="HandleTaxAmountChange" OnInvoiceLineDeletion="DeleteInvoiceLineTax" InvoiceLine="Model" Model=invoiceLineTax></InvoiceLineTax>
+                    }
+                }
+               
+            <div class="row">
+                <div class="col-12">
+                    <button type="button" @onclick="AddInvoiceLineTax" class="btn btn-success btn-sm" data-repeater-create><i class="ri-add-line ri-14px me-1"></i> Add Tax</button>
+                </div>
+            </div>
+            </div>
+
+            <div class="d-flex flex-column align-items-center justify-content-between border-start p-2">
+                <button class="btn btn-danger" @onclick="OnInvoiceLineDeleted"><i class="ri-close-line cursor-pointer" data-repeater-delete></i></button>
+            </div>
+        </div>
+    </div>
+</div>
 
 @code {
 
+    [Parameter]
+    public InvoiceLineDto Model { get; set; }
+    [Parameter]
+    public EventCallback<InvoiceLineDto> OnInvoiceLineDeletion { get; set; }
+    [Parameter]
+    public EventCallback OnItemNetAmountChange { get; set; }
+    private async Task<AutoCompleteDataProviderResult<ItemDto>> ItemsDataProvider(AutoCompleteDataProviderRequest<ItemDto> request)
+    {
+        var items = await _itemService.GetList("Name", request.Filter.Value); // API call
+        return await Task.FromResult(new AutoCompleteDataProviderResult<ItemDto> { Data = items!, TotalCount = items.Count() });
+    }
+    private void OnAutoCompleteChanged(ItemDto item)
+    {
+        Model.ItemId = item.Id;
+        Model.Amount = item.DefaultAmount;
+        Model.Quantity = 1;
+        Model.Total = Model.Amount * 1;
+        ReCalculateItemNetAmount();
+        OnItemNetAmountChange.InvokeAsync();
+        Console.WriteLine($"'{item?.Name}' with id {item?.Id}' selected.");
+    }
+    public void OnInvoiceLineDeleted()
+    {
+        OnInvoiceLineDeletion.InvokeAsync(Model);
+    }
+    public void HandleAmountChange(ChangeEventArgs e)
+    {
+        if(decimal.TryParse(e.Value.ToString(),out var value))
+        {
+            Model.Amount = value;
+            Model.Total = value * Model.Quantity;
+            ReCalculateItemNetAmount();
+            OnItemNetAmountChange.InvokeAsync();
+        }
+    }
+    public void HandleQuantityChange(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value.ToString(), out var value))
+        {
+            Model.Quantity = value;
+            Model.Total = value * Model.Amount;
+            ReCalculateItemNetAmount();
+            OnItemNetAmountChange.InvokeAsync();
+        }
+    }
+    public void AddInvoiceLineTax()
+    {
+        if (Model.InvoiceLineTaxes != null)
+            Model.InvoiceLineTaxes.Add(new InvoiceLineTaxDto());
+        else
+        {
+            Model.InvoiceLineTaxes = new List<InvoiceLineTaxDto> { new InvoiceLineTaxDto() };
+        }
+    }
+
+    public void DeleteInvoiceLineTax(InvoiceLineTaxDto invoiceLineTax)
+    {
+        var toDelete = Model.InvoiceLineTaxes.IndexOf(invoiceLineTax);
+        Model.InvoiceLineTaxes!.RemoveAt(toDelete);
+        ReCalculateItemNetAmount();
+        OnItemNetAmountChange.InvokeAsync();
+    }
+    public void HandleTaxAmountChange()
+    {
+        ReCalculateItemNetAmount();
+        OnItemNetAmountChange.InvokeAsync();
+    }
+    private void ReCalculateItemNetAmount()
+    {
+        Model.ItemNetAmount = Model.Quantity*Model.Amount;
+        if (Model.InvoiceLineTaxes != null)
+        {
+            foreach(var invoiceLineTax in Model.InvoiceLineTaxes!)
+            {
+                Model.ItemNetAmount += invoiceLineTax.Amount;
+            }
+        }
+    }
 }
