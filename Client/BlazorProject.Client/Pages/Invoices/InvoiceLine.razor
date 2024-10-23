@@ -10,7 +10,8 @@
                                   DataProvider="ItemsDataProvider"
                                   PropertyName="Name"
                                   Placeholder="Choose an item"
-                                  OnChanged="(ItemDto Item) => OnAutoCompleteChanged(Item)" />
+                                  OnChanged="(ItemDto Item) => OnAutoCompleteChanged(Item)"
+                                  />
 
                 </div>
                 <div class="col-md-3 col-12 mb-md-0 mb-4">
@@ -28,7 +29,7 @@
                 </div>
                 @if (Model.InvoiceLineTaxes!=null)
                 {
-                    @foreach(var invoiceLineTax in Model.InvoiceLineTaxes)
+                    @foreach(var invoiceLineTax in Model.InvoiceLineTaxes.Where(e=>!e.IsDeleted))
                     {
                         <InvoiceLineTax OnTaxAmountChanged="HandleTaxAmountChange" OnInvoiceLineDeletion="DeleteInvoiceLineTax" InvoiceLine="Model" Model=invoiceLineTax></InvoiceLineTax>
                     }
@@ -58,6 +59,7 @@
     public EventCallback OnItemNetAmountChange { get; set; }
     private async Task<AutoCompleteDataProviderResult<ItemDto>> ItemsDataProvider(AutoCompleteDataProviderRequest<ItemDto> request)
     {
+        Model.ItemName = request.Filter.Value;
         var items = await _itemService.GetList("Name", request.Filter.Value); // API call
         return await Task.FromResult(new AutoCompleteDataProviderResult<ItemDto> { Data = items!, TotalCount = items.Count() });
     }
@@ -107,8 +109,9 @@
 
     public void DeleteInvoiceLineTax(InvoiceLineTaxDto invoiceLineTax)
     {
-        var toDelete = Model.InvoiceLineTaxes.IndexOf(invoiceLineTax);
-        Model.InvoiceLineTaxes!.RemoveAt(toDelete);
+        invoiceLineTax.IsDeleted = true;
+        // var toDelete = Model.InvoiceLineTaxes.IndexOf(invoiceLineTax);
+        // Model.InvoiceLineTaxes!.RemoveAt(toDelete);
         ReCalculateItemNetAmount();
         OnItemNetAmountChange.InvokeAsync();
     }
@@ -122,7 +125,7 @@
         Model.ItemNetAmount = Model.Quantity*Model.Amount;
         if (Model.InvoiceLineTaxes != null)
         {
-            foreach(var invoiceLineTax in Model.InvoiceLineTaxes!)
+            foreach(var invoiceLineTax in Model.InvoiceLineTaxes.Where(e=>!e.IsDeleted)!)
             {
                 Model.ItemNetAmount += invoiceLineTax.Amount;
             }

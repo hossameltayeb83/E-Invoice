@@ -64,15 +64,15 @@ namespace BlazorProject.Infrastructure.Migrations
                     Type = table.Column<int>(type: "int", nullable: false),
                     Code = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     NetAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    CustomerId = table.Column<int>(type: "int", nullable: false),
+                    CustomerID = table.Column<int>(type: "int", nullable: false),
                     DateTimeIssued = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Invoices", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Invoices_Customers_CustomerId",
-                        column: x => x.CustomerId,
+                        name: "FK_Invoices_Customers_CustomerID",
+                        column: x => x.CustomerID,
                         principalTable: "Customers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -90,7 +90,8 @@ namespace BlazorProject.Infrastructure.Migrations
                     Quantity = table.Column<int>(type: "int", nullable: false),
                     Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Total = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    ItemNetAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
+                    ItemNetAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -117,6 +118,7 @@ namespace BlazorProject.Infrastructure.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     InvoiceLineId = table.Column<int>(type: "int", nullable: false),
                     TaxId = table.Column<int>(type: "int", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
                     TaxName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     TaxRate = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
@@ -161,9 +163,9 @@ namespace BlazorProject.Infrastructure.Migrations
                 column: "TaxId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Invoices_CustomerId",
+                name: "IX_Invoices_CustomerID",
                 table: "Invoices",
-                column: "CustomerId");
+                column: "CustomerID");
         }
 
         /// <inheritdoc />

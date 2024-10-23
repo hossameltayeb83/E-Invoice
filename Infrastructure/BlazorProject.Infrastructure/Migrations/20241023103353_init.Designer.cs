@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BlazorProject.Infrastructure.Migrations
 {
     [DbContext(typeof(ProjectContext))]
-    [Migration("20241014011123_init")]
+    [Migration("20241023103353_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -61,7 +61,7 @@ namespace BlazorProject.Infrastructure.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<int>("CustomerId")
+                    b.Property<int>("CustomerID")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("DateTimeIssued")
@@ -75,7 +75,7 @@ namespace BlazorProject.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CustomerId");
+                    b.HasIndex("CustomerID");
 
                     b.ToTable("Invoices");
                 });
@@ -93,6 +93,9 @@ namespace BlazorProject.Infrastructure.Migrations
 
                     b.Property<int>("InvoiceId")
                         .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<int>("ItemId")
                         .HasColumnType("int");
@@ -134,6 +137,9 @@ namespace BlazorProject.Infrastructure.Migrations
 
                     b.Property<int>("InvoiceLineId")
                         .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<int>("TaxId")
                         .HasColumnType("int");
@@ -212,7 +218,7 @@ namespace BlazorProject.Infrastructure.Migrations
                 {
                     b.HasOne("BlazorProject.Domain.Entities.Customer", "Customer")
                         .WithMany("Invoices")
-                        .HasForeignKey("CustomerId")
+                        .HasForeignKey("CustomerID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

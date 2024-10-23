@@ -45,7 +45,24 @@ namespace BlazorProject.Application.Features.Invoices
 
 		public void UpdateLogic(Invoice entity)
 		{
-			CreateLogic(entity);
-		}
+            entity.NetAmount = 0;
+            foreach (var invoiceLine in entity.InvoiceLines)
+            {
+                if (!invoiceLine.IsDeleted)
+                {
+                    invoiceLine.Total = invoiceLine.Amount * invoiceLine.Quantity;
+                    invoiceLine.ItemNetAmount = invoiceLine.Total;
+                    foreach (var invoiceLineTax in invoiceLine.InvoiceLineTaxes)
+                    {
+                        if (!invoiceLineTax.IsDeleted)
+                        {
+                            invoiceLineTax.Amount = invoiceLine.Amount * (invoiceLineTax.TaxRate / 100);
+                            invoiceLine.ItemNetAmount += invoiceLineTax.Amount;
+                        }
+                    }
+                    entity.NetAmount += invoiceLine.ItemNetAmount;
+                }
+            }
+        }
 	}
 }

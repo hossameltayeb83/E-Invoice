@@ -88,7 +88,7 @@
 
             @if (Model.InvoiceLines != null)
             {
-                @foreach(var invoiceLine in Model.InvoiceLines)
+                @foreach(var invoiceLine in Model.InvoiceLines.Where(e=> !e.IsDeleted))
                 { 
                     <InvoiceLine Model="invoiceLine" OnItemNetAmountChange="OnNetAmountChanged" OnInvoiceLineDeletion="DeleteInvoiceLine"></InvoiceLine>
                 
@@ -152,14 +152,15 @@
     }
     public void DeleteInvoiceLine(InvoiceLineDto invoiceLine)
     {
-        var toDelete = Model.InvoiceLines.IndexOf(invoiceLine);
-        Model.InvoiceLines!.RemoveAt(toDelete);
+        invoiceLine.IsDeleted = true;
+        // var toDelete = Model.InvoiceLines.IndexOf(invoiceLine);
+        // Model.InvoiceLines!.RemoveAt(toDelete);
         OnNetAmountChanged();
     }
     public void OnNetAmountChanged()
     {
         Model.NetAmount = 0;
-        foreach(var invoiceLine in Model.InvoiceLines!)
+        foreach(var invoiceLine in Model.InvoiceLines.Where(e=>!e.IsDeleted)!)
         {
             Model.NetAmount += invoiceLine.ItemNetAmount;
         }

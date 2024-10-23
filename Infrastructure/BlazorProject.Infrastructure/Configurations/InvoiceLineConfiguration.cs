@@ -14,6 +14,11 @@ namespace BlazorProject.Infrastructure.Configurations
 		public void Configure(EntityTypeBuilder<InvoiceLine> builder)
 		{
 			builder.ToTable("InvoiceLines");
+			//builder.HasOne(e=>e.Item)
+			//	.WithMany(e=>e.InvoiceLines)
+			//	.HasForeignKey(e=>e.ItemId)
+			//	.OnDelete(DeleteBehavior.SetNull)
+			//	 ;
 			builder.HasIndex("ItemId", "InvoiceId").IsUnique();
 			builder.Property(e => e.ItemName).HasMaxLength(50);
 		}

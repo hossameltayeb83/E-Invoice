@@ -21,7 +21,6 @@ namespace BlazorProject.Shared.Dtos
         public DateTime DateTimeIssued { get; set; }
         public InvoiceType? Type { get; set; }
         public List<InvoiceLineDto>? InvoiceLines { get; set; }
-
         public string ToQueryParameters()
         {
             StringBuilder sb = new StringBuilder();
@@ -55,6 +54,8 @@ namespace BlazorProject.Shared.Dtos
         public int Quantity { get; set; }
         public decimal Amount { get; set; }
         public decimal ItemNetAmount { get; set; }
+        public bool IsDeleted { get; set; }
+
         public List<InvoiceLineTaxDto>? InvoiceLineTaxes { get; set; }
     }
     public class InvoiceLineTaxDto
@@ -64,6 +65,7 @@ namespace BlazorProject.Shared.Dtos
         public int TaxId { get; set; }
         public string? TaxName { get; set; }
         public decimal TaxRate { get; set; }
+        public bool IsDeleted { get; set; }
         public decimal Amount { get; set; }
     }
 }

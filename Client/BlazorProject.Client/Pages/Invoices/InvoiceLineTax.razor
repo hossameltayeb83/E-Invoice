@@ -47,6 +47,7 @@
     public EventCallback OnTaxAmountChanged { get; set; }
     private async Task<AutoCompleteDataProviderResult<TaxDto>> TaxesDataProvider(AutoCompleteDataProviderRequest<TaxDto> request)
     {
+        Model.TaxName = request.Filter.Value;
         var taxes = await _taxService.GetList("Name", request.Filter.Value); // API call
         return await Task.FromResult(new AutoCompleteDataProviderResult<TaxDto> { Data = taxes!, TotalCount = taxes.Count() });
     }

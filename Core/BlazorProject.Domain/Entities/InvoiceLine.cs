@@ -18,6 +18,8 @@ namespace BlazorProject.Domain.Entities
 		public decimal Amount { get; set; }
 		public decimal Total {  get; set; }
 		public decimal ItemNetAmount { get; set; }
-		public IReadOnlyCollection<InvoiceLineTax> InvoiceLineTaxes { get; set; }
+        public bool IsDeleted { get; set; }
+
+        public IReadOnlyCollection<InvoiceLineTax> InvoiceLineTaxes { get; set; }
 	}
 }

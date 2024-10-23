@@ -16,5 +16,7 @@ namespace BlazorProject.Application.Contracts.Infrastructre
 
 
 		ValueTask<Invoice?> GetInvoiceWithIncludes(int invoiceId);
+
+		Task UpdateInvoice(Invoice invoice);
 	}
 }

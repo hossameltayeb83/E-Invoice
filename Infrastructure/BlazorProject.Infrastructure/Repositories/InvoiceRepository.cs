@@ -6,6 +6,7 @@ using BlazorProject.Domain.Enums;
 using BlazorProject.Infrastructure.Data;
 using BlazorProject.Shared.Dtos;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -53,5 +54,25 @@ namespace BlazorProject.Infrastructure.Repositories
 				.ThenInclude(e=>e.InvoiceLineTaxes)
 				.FirstOrDefaultAsync(e=>e.Id==invoiceId);
 		}
-	}
+
+        public async Task UpdateInvoice(Invoice invoice)
+        {
+           var entity= await GetInvoiceWithIncludes(invoice.Id);
+			_context.Entry(entity).State=EntityState.Detached;
+		   var orgTaxes= entity.InvoiceLines.SelectMany(e=>e.InvoiceLineTaxes);
+			var orgLines = entity.InvoiceLines;
+		   var newTaxes= invoice.InvoiceLines.SelectMany(e=>e.InvoiceLineTaxes).Select(e => e.Id);
+			var deletedtax = orgTaxes.Where(e => !newTaxes.Contains(e.Id));
+            foreach (var tax in deletedtax)
+            {
+                _context.Entry(tax).State = EntityState.Deleted;
+            }
+            var newLines = invoice.InvoiceLines.Select(e => e.Id);
+			var deletetdlines = orgLines.Where(e => !newLines.Contains(e.Id));
+			foreach(var line in deletetdlines)
+			{
+                _context.Entry(line).State = EntityState.Deleted;
+            }
+        }
+    }
 }

@@ -14,7 +14,11 @@ namespace BlazorProject.Infrastructure.Configurations
 		public void Configure(EntityTypeBuilder<InvoiceLineTax> builder)
 		{
 			builder.ToTable("InvoiceLineTaxes");
-			builder.HasIndex("InvoiceLineId", "TaxId").IsUnique();
+            //builder.HasOne(e => e.Tax)
+            //    .WithMany(e => e.InvoiceLineTaxes)
+            //    .HasForeignKey(e => e.TaxId)
+            //    .OnDelete(DeleteBehavior.SetNull);
+            builder.HasIndex("InvoiceLineId", "TaxId").IsUnique();
 			builder.Property(e => e.TaxName).HasMaxLength(50);
 		}
 	}
