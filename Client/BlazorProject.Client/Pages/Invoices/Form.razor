@@ -31,7 +31,7 @@
                         <dd class="col-sm-7">
                             <div class="input-group input-group-sm input-group-merge">
                                 <span class="input-group-text">#</span>
-                                    <InputText type="text" @bind-Value=Model.Code @oninput="CheckCodeIsUnique" class="form-control" id="code" />
+                                    <InputText type="text" @bind-Value=Model.Code @oninput="CheckCodeIsUnique"  class="form-control" id="code" />
                                     @if (!string.IsNullOrEmpty(CodeErrorMessage))
                                     {
                                         <div class="text-danger">@CodeErrorMessage</div>
@@ -44,19 +44,30 @@
                                 <span class="fw-normal text-nowrap">Date Issued:</span>
                             </dt>
                             <dd class="col-sm-7">
-                                <InputDate @bind-Value=Model.DateTimeIssued disabled class="form-control form-control-sm" />
+                                <input @bind-value=Model.DateTimeIssued disabled class="form-control form-control-sm" />
                             </dd>
                         }
                         <dt class="col-sm-5 mb-2 d-md-flex align-items-center justify-content-start">
                             <span class="fw-normal text-nowrap">Invoice To:</span>
                         </dt>
                         <dd class="col-sm-7">
-                                <AutoComplete @bind-Value="Model.CustomerName"
+                                <AutoComplete disabled="@IsEdit" @bind-Value="Model.CustomerName"
                                               TItem="CustomerDto"
                                               DataProvider="CustomersDataProvider"
                                               PropertyName="Name"
                                               OnChanged="(CustomerDto customer) => OnAutoCompleteChanged(customer)" />
                         </dd>
+                            <dt class="col-sm-5 mb-2 d-md-flex align-items-center justify-content-start">
+                                <span class="fw-normal text-nowrap">Invoice Type:</span>
+                            </dt>
+                            <dd class="col-sm-7">
+                                <InputSelect disabled="@IsEdit" class="form-select" @bind-Value="@Model.Type">
+                                    @foreach (var type in Enum.GetValues(typeof(InvoiceType)))
+                                    {
+                                        <option value="@type">@type</option>
+                                    }
+                                </InputSelect>
+                            </dd>
                         <dt class="col-sm-5 mb-2 d-md-flex align-items-center justify-content-start">
                             <span class="fw-normal text-nowrap">Net Amount:</span>
                         </dt>

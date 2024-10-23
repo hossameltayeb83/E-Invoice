@@ -1,6 +1,6 @@
 ﻿@page "/Taxes"
 @inject IService<TaxDto> _service
-<FiltersComponent SearchSubmited="OnPaginatedSearch" FilterFor="Taxes">
+<FiltersComponent SearchSubmited="OnPaginatedSearch" SearchReset="()=>SearchCriteria=new TaxDto()" FilterFor="Taxes">
 	<div class="col-md-6">
 		<label for="name">Name</label>
 		<input type="text" @bind-value=@SearchCriteria.Name id="name" class="form-control" />

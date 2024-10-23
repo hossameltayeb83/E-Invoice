@@ -1,16 +1,25 @@
 ﻿@page "/"
 @page "/Invoices"
 @inject IService<InvoiceDto> _service
-<FiltersComponent SearchSubmited="OnPaginatedSearch" FilterFor="Invoices">
-	<div class="col-md-6">
+<FiltersComponent SearchSubmited="OnPaginatedSearch" SearchReset="()=>SearchCriteria=new InvoiceDto()" FilterFor="Invoices">
+	<div class="col-md-4">
 		<label for="name">Customer Name</label>
 		<input type="text" @bind-value=@SearchCriteria.CustomerName id="name" class="form-control" />
 	</div>
-	<div class="col-md-6">
+	<div class="col-md-4">
 		<label for="code">Code</label>
 		<input type="text" @bind-value=@SearchCriteria.Code id="code" class="form-control" />
 	</div>
-
+	<div class="col-md-4">
+		<label for="type">Type</label>
+		<InputSelect class="form-select" @bind-Value="@SearchCriteria.Type">
+			<option value="" >Any Type</option>
+			@foreach (var type in Enum.GetValues(typeof(InvoiceType)))
+			{
+				<option value="@type">@type</option>
+			}
+		</InputSelect>
+	</div>
 </FiltersComponent>
 
 <div class="card">

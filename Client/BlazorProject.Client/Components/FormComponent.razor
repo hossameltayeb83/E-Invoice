@@ -1,4 +1,5 @@
-﻿@typeparam TDto where TDto : IDto
+﻿@typeparam TDto where TDto : IDto,new()
+@inject IService<TDto> _service
 @inject NavigationManager _navManager
 <div class="col-xl">
     <div class="card mb-6">
@@ -23,14 +24,16 @@
 
 @code {
     [Parameter]
-    public string Resource { get; set; } = "Items";
+    public string Resource { get; set; }
     [Parameter]
     public int Id { get; set; }
-    [Parameter]
-    public IService<TDto> _service { get; set; }
+    public string CodeErrorMessage { get; set; }
+
     [Parameter]
     public RenderFragment ChildContent { get; set; }
-    public TDto Model { get; set; }
+
+    public TDto Model { get; set; } = new TDto();
+    [Parameter]
     public bool IsEdit { get; set; }
     protected async override Task OnParametersSetAsync()
     {
@@ -44,24 +47,26 @@
     }
     public async void Submit()
     {
-        if (IsEdit)
-        {
-            Model.Id = Id;
-            await _service.Update(Model);
-        }
-        else
-        {
-            var id = await _service.Create(Model);
-            if (id != null)
+        if (string.IsNullOrEmpty(CodeErrorMessage))
+            if (IsEdit)
             {
-                _navManager.NavigateTo($"/{Resource}/Form/{id}");
+                Model.Id = Id;
+                await _service.Update(Model);
             }
-        }
+            else
+            {
+                var id = await _service.Create(Model);
+                if (id != null)
+                {
+                    _navManager.NavigateTo($"/{Resource}/Form/{id}");
+                }
+            }
     }
     public async Task DeleteItem()
     {
         if (await _service.Delete(Id))
             _navManager.NavigateTo($"/{Resource}");
     }
+    
 }
 

@@ -2,12 +2,14 @@
 using BlazorProject.Application.Features.Invoices;
 using BlazorProject.Application.Features.Items;
 using BlazorProject.Domain.Entities;
+using BlazorProject.Domain.Enums;
 using BlazorProject.Infrastructure.Data;
 using BlazorProject.Shared.Dtos;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -33,8 +35,13 @@ namespace BlazorProject.Infrastructure.Repositories
 			{
 				query = query.Where(e => e.Customer.Name.Contains(searchCriteria.CustomerName));
 			}
-			
-			
+			if (searchCriteria.Type != null)
+			{
+				var value = (int)searchCriteria.Type;
+				query = query.Where(e => e.Type== (Domain.Enums.InvoiceType)value);
+			}
+
+
 			return await base.GetAllAsync(query, page, pageSize);
 		}
 

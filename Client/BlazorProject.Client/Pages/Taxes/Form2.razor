@@ -1,0 +1,51 @@
+﻿@page "/Taxes/Form2"
+@page "/Taxes/Form2/{id:int}"
+@inject IService<TaxDto> _Service
+@inject NavigationManager _navManager
+
+<FormComponent Id=Id IsEdit=IsEdit Resource="Taxes" TDto="TaxDto">
+    <div class="form-floating form-floating-outline col-md-6 mb-6">
+        <InputText type="text" @bind-Value="Model.Name" class="form-control" id="name" placeholder="Hossam" />
+        <label for="name">Name</label>
+        <ValidationMessage For="@(() => Model.Name)"></ValidationMessage>
+    </div>
+    <div class="form-floating form-floating-outline col-md-6 mb-6">
+        <InputText type="text" @bind-Value="Model.Code" @oninput="CheckCodeIsUnique" class="form-control" id="code" />
+        <label for="code">Code</label>
+        <ValidationMessage For="@(() => Model.Code)"></ValidationMessage>
+        @if (!string.IsNullOrEmpty(CodeErrorMessage))
+        {
+            <div class="text-danger">@CodeErrorMessage</div>
+        }
+    </div>
+    <div class="form-floating form-floating-outline col-md-6 mb-6">
+        <InputNumber type="text"
+                        @bind-Value="Model.DefaultRate"
+                        id="default-rate"
+                        class="form-control" />
+        <label for="default-rate">Default Rate</label>
+        <ValidationMessage For="@(() => Model.DefaultRate)"></ValidationMessage>
+    </div>
+</FormComponent>
+
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+    public TaxDto Model { get; set; } = new();
+    public bool IsEdit { get; set; }
+    public string CodeErrorMessage { get; set; }
+    
+   
+    
+    public async Task CheckCodeIsUnique(ChangeEventArgs e)
+    {
+        var items = await _Service.GetAllWithSearch(new TaxDto { Code = e.Value.ToString() }, 1, 1);
+
+        if (items.Result != null && items.Result.Any())
+            CodeErrorMessage = "A Tax With This Code Already Exist.";
+        else
+            CodeErrorMessage = string.Empty;
+
+    }
+}

@@ -1,6 +1,6 @@
 ﻿@page "/Items"
 @inject IService<ItemDto> _itemsService
-<FiltersComponent SearchSubmited="OnPaginatedSearch" FilterFor="Items">
+<FiltersComponent SearchSubmited="OnPaginatedSearch" SearchReset="()=>SearchCriteria=new ItemDto()" FilterFor="Items">
 	<div class="col-md-6">
 		<label for="name">Name</label>
 		<input type="text" @bind-value=@SearchCriteria.Name id="name" class="form-control" />

@@ -19,7 +19,7 @@ namespace BlazorProject.Shared.Dtos
         public string? Code { get; set; }
         public decimal NetAmount { get; set; }
         public DateTime DateTimeIssued { get; set; }
-        public InvoiceType Type { get; set; }
+        public InvoiceType? Type { get; set; }
         public List<InvoiceLineDto>? InvoiceLines { get; set; }
 
         public string ToQueryParameters()
@@ -33,7 +33,16 @@ namespace BlazorProject.Shared.Dtos
                     sb.Append($"&CustomerName={CustomerName}");
                 else
                     sb.Append($"CustomerName={CustomerName}");
-            return sb.ToString();
+			if (Type != null)
+            {
+                var value=(int)Type;
+				if (sb.Length > 1)
+					sb.Append($"&Type={value}");
+				else
+					sb.Append($"Type={value}");
+			}
+				
+			return sb.ToString();
         }
     }
     public class InvoiceLineDto
